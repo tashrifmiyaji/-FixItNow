@@ -5,16 +5,18 @@ import AppError from "../errors/AppError";
 import { UserRole } from "../../../generated/prisma/enums";
 
 const authorize = (...roles: UserRole[]): RequestHandler => {
-  return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
-      throw new AppError(
-        httpStatus.FORBIDDEN,
-        "You are not authorized to access this resource!"
-      );
-    }
+	return (req, res, next) => {
+		const user = req.user!;
+    
+		if (!roles.includes(user.role)) {
+			throw new AppError(
+				httpStatus.FORBIDDEN,
+				"You are not authorized to access this resource!",
+			);
+		}
 
-    next();
-  };
+		next();
+	};
 };
 
 export default authorize;
